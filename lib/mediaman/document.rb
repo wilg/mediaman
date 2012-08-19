@@ -38,6 +38,10 @@ module Mediaman
       end
     end
     
+    def local_metadata_fetched?
+      @local_metadata.present?
+    end
+    
     def remote_metadata
       @remote_metadata ||= begin
          if local_metadata['movie']
@@ -61,22 +65,34 @@ module Mediaman
       @video_metadata ||= MiniSubler::Command.vendored.get_metadata(self.video_files.first).try(:stringify_keys)
     end
         
-    def sidecar_path
-      File.join File.dirname(self.path), File.basename(self.path, '.*') + ".meta.yml"
+    def sidecar_paths
+      direct_sidecar  = File.join(File.dirname(self.path), File.basename(self.path, '.*') + ".meta.yml")
+      library_sidecar = File.join(File.dirname(self.path), "Extras", File.basename(self.path, '.*'), "Metadata.yml")
+      [direct_sidecar, library_sidecar]
+    end
+    
+    def default_sidecar_path
+      d = nil
+      for path in sidecar_paths
+        d = path if File.exists?(path)
+      end
+      d = sidecar_paths.first if d.nil?
+      d
     end
     
     def sidecar_metadata
       @sidecar_metadata ||= begin
-        if File.exists?(sidecar_path)
-          y = YAML::load(File.open(sidecar_path))
-          y.stringify_keys! if y.present?
-        else
-          nil
+        y = {}
+        for path in sidecar_paths
+          if File.exists?(path)
+            y.merge! YAML::load(File.open(path))
+          end
         end
+        y.stringify_keys
       end
     end
     
-    def save_sidecar!(path = sidecar_path)
+    def save_sidecar!(path = default_sidecar_path)
       FileUtils.mkdir_p(File.dirname(path))
       File.open(path, 'w') {|f| f.write(self.metadata.stringify_keys.to_yaml) }
     end
