@@ -1,5 +1,6 @@
 require 'yaml'
 require 'mini_subler'
+require "open-uri"
 
 module Mediaman
 
@@ -15,6 +16,27 @@ module Mediaman
     end
     
     attr_accessor :path
+    
+    def apply_metadata!
+      # Download image.
+      # Add metadata to file.
+      # Rewrap mxf to mp4.
+    end
+    
+    def download_image!
+      if metadata.canonical_image_url.present?
+        FileUtils.mkdir_p(File.dirname(artwork_path))
+        open(metadata.canonical_image_url) {|f|
+           File.open(artwork_path, "wb") do |file|
+             file.puts f.read
+           end
+        }
+      end
+    end
+    
+    def artwork_path
+      File.join extras_path, "Artwork#{metadata.canonical_image_url.present? ? File.extname(metadata.canonical_image_url) : ".jpg"}"
+    end
     
     def metadata
       @metadata ||= begin
@@ -64,10 +86,18 @@ module Mediaman
     def video_metadata
       @video_metadata ||= MiniSubler::Command.vendored.get_metadata(self.video_files.first).try(:stringify_keys)
     end
+    
+    def extras_path
+      File.join File.dirname(self.path), File.basename(self.path, '.*') + " Extras"
+    end
+    
+    def library_extras_path
+      File.join(File.dirname(self.path), "Extras", File.basename(self.path, '.*'))
+    end
         
     def sidecar_paths
-      direct_sidecar  = File.join(File.dirname(self.path), File.basename(self.path, '.*') + ".meta.yml")
-      library_sidecar = File.join(File.dirname(self.path), "Extras", File.basename(self.path, '.*'), "Metadata.yml")
+      direct_sidecar  = File.join(extras_path, "Metadata.yml")
+      library_sidecar = File.join(library_extras_path, "Metadata.yml")
       [direct_sidecar, library_sidecar]
     end
     

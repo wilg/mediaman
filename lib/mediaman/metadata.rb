@@ -25,6 +25,14 @@ module Mediaman
       return "Movies" if movie?
       "Other Media"
     end
+    
+    def canonical_image_url
+      if tv?
+        episode_details.try(:[], "images").try(:first).try(:last)
+      else
+        movie_details.try(:[], "poster").presence
+      end
+    end
       
   end
   
