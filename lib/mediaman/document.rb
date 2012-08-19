@@ -9,7 +9,7 @@ module Mediaman
   class Document
   
     def self.from_path(path)
-      f = Document.new
+      f = self.new
       f.path = File.expand_path path
       f
     end
@@ -21,7 +21,8 @@ module Mediaman
         metadata = {}
         metadata.merge!(local_metadata || {})
         metadata.merge!(remote_metadata || {})
-        metadata.reject{|k, v| v.blank?}
+        metadata.reject!{|k, v| v.blank?}
+        Metadata.new(metadata)
       end
     end
     alias_method :extract_metadata!, :metadata
@@ -32,17 +33,18 @@ module Mediaman
         metadata.merge!(filename_metadata || {})
         metadata.merge!(video_metadata || {})
         metadata.merge!(sidecar_metadata || {})
-        metadata.reject{|k, v| v.blank?}
+        metadata.reject!{|k, v| v.blank?}
+        Metadata.new(metadata)
       end
     end
     
     def remote_metadata
       @remote_metadata ||= begin
          if local_metadata['movie']
-           {'movie' => Trakt::Movie.new(title: local_metadata['name'], year: local_metadata['year'])}
+           Metadata.new({'movie_details' => Trakt::Movie.new(title: local_metadata['name'], year: local_metadata['year'])})
          elsif local_metadata['tv']
            tv = Trakt::TVEpisode.new show_title: local_metadata['name'], season_number: local_metadata['season_number'], episode_number: local_metadata['episode_number']
-           {'episode' => tv.to_hash, 'show' => tv.show.to_hash}
+           Metadata.new({'episode_details' => tv.to_hash, 'show_details' => tv.show.to_hash})
          end
       end
     end
