@@ -9,8 +9,17 @@ module Mediaman
   
     attr_accessor :library_path
     
-    def sort!
+    def move!
       # Sorts based on media info.
+    end
+    
+    def files_to_move
+      files = {}
+      files[primary_video_file] = library_file_path if primary_video_file
+      for file in junk_files + secondary_video_files
+        files[file] = File.join library_junk_path, File.basename(file)
+      end
+      files
     end
     
     def library_filename
@@ -55,7 +64,14 @@ module Mediaman
       end
     end
     
-         
+    def library_extras_path
+      File.join File.dirname(library_file_path), "Extras", File.basename(library_file_path, '.*')
+    end
+    
+    def library_junk_path
+      File.join library_extras_path, "Junk"
+    end
+    
   end
 
 end

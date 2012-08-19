@@ -86,6 +86,16 @@ module Mediaman
       @video_files
     end
     
+    def secondary_video_files
+      if video_files && primary_video_file
+        v = video_files.dup
+        v.delete primary_video_file
+        v
+      else
+        []
+      end
+    end
+ 
     def primary_video_file
       sort_junk! unless @video_files
       @primary_video_file ||= @video_files.sort{|a, b| File.size?(a) <=> File.size?(b) }.first
@@ -95,7 +105,7 @@ module Mediaman
       sort_junk! unless @junk_files
       @junk_files
     end
-    
+        
     private
     
     def sort_junk!
