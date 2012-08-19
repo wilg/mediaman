@@ -26,9 +26,7 @@ module Mediaman
     desc "metadata <file>", "returns all the metadata discoverable about this file or directory"
     def metadata(path)
       doc = Document.from_path(path)
-      doc.extract_metadata!
-      doc.save_sidecar!
-      doc.download_image!
+      doc.save_and_apply_metadata!
       puts "Metadata and image saved to #{doc.extras_path}"
     end
     
