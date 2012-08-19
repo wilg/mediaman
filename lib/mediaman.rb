@@ -1,5 +1,11 @@
-require "mediaman/version"
+# Dependencies
+require 'active_support/all'
 
-module Mediaman
-  # Your code goes here...
-end
+# Helpers
+require "mediaman/version"
+require "mediaman/media_filename"
+require "mediaman/trakt"
+
+# Models
+require "mediaman/document"
+require "mediaman/library_document"
