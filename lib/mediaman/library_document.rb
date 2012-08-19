@@ -14,14 +14,15 @@ module Mediaman
         FileUtils.mkdir_p(File.dirname(new_file))
         FileUtils.move(original_file, new_file)
       end
-      save_sidecar! library_sidecar_path
+      rebase! library_file_path
+      FileUtils.mkdir_p library_extras_path
     end
     
     def files_to_move
       files = {}
       files[primary_video_file] = library_file_path if primary_video_file
       for file in junk_files + secondary_video_files
-        files[file] = File.join library_junk_path, File.basename(file)
+        files[file] = File.join desired_library_junk_path, File.basename(file)
       end
       files
     end
@@ -68,18 +69,14 @@ module Mediaman
       end
     end
     
-    def library_extras_path
+    def desired_library_extras_path
       File.join File.dirname(library_file_path), "Extras", File.basename(library_file_path, '.*')
     end
     
-    def library_junk_path
-      File.join library_extras_path, "Junk"
+    def desired_library_junk_path
+      File.join desired_library_extras_path, "Junk"
     end
-    
-    def library_sidecar_path
-      File.join library_extras_path, "Metadata.yml"
-    end
-    
+        
   end
 
 end

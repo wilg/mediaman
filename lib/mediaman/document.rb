@@ -17,14 +17,24 @@ module Mediaman
     
     attr_accessor :path
     
-    def apply_metadata!
+    def rebase!(path)
+      self.path = path
+      @primary_video_file = nil
+      @junk_files = nil
+      @video_files = nil
+    end
+    
+    def save_and_apply_metadata!
+      extract_metadata!
+      save_sidecar!
+      download_image!
       # Download image.
       # Add metadata to file.
       # Rewrap mxf to mp4.
     end
     
     def download_image!
-      if metadata.canonical_image_url.present?
+      if !File.exists?(artwork_path) && metadata.canonical_image_url.present?
         FileUtils.mkdir_p(File.dirname(artwork_path))
         open(metadata.canonical_image_url) {|f|
            File.open(artwork_path, "wb") do |file|
@@ -35,7 +45,7 @@ module Mediaman
     end
     
     def artwork_path
-      File.join extras_path, "Artwork#{metadata.canonical_image_url.present? ? File.extname(metadata.canonical_image_url) : ".jpg"}"
+      extra_path "Artwork#{metadata.canonical_image_url.present? ? File.extname(metadata.canonical_image_url) : ".jpg"}"
     end
     
     def metadata
@@ -87,33 +97,41 @@ module Mediaman
       @video_metadata ||= MiniSubler::Command.vendored.get_metadata(self.video_files.first).try(:stringify_keys)
     end
     
-    def extras_path
-      File.join File.dirname(self.path), File.basename(self.path, '.*') + " Extras"
+    def standalone_extras_path
+      File.join(File.dirname(self.path), File.basename(self.path, '.*') + " Extras")
     end
     
     def library_extras_path
       File.join(File.dirname(self.path), "Extras", File.basename(self.path, '.*'))
     end
         
-    def sidecar_paths
-      direct_sidecar  = File.join(extras_path, "Metadata.yml")
-      library_sidecar = File.join(library_extras_path, "Metadata.yml")
-      [direct_sidecar, library_sidecar]
+    def extras_paths
+      [library_extras_path, standalone_extras_path]
     end
     
-    def default_sidecar_path
+    def extras_path
       d = nil
-      for path in sidecar_paths
+      for path in extras_paths.uniq
         d = path if File.exists?(path)
       end
-      d = sidecar_paths.first if d.nil?
+      d = extras_paths.last if d.nil?
       d
     end
     
+    def extra_path(file)
+      File.join extras_path, file
+    end
+    
+    def extra_paths(file)
+      extras_paths.uniq.map do |x|
+        File.join x, file
+      end
+    end
+        
     def sidecar_metadata
       @sidecar_metadata ||= begin
         y = {}
-        for path in sidecar_paths
+        extra_paths("Metadata.yml").each do |path|
           if File.exists?(path)
             y.merge! YAML::load(File.open(path))
           end
@@ -122,7 +140,7 @@ module Mediaman
       end
     end
     
-    def save_sidecar!(path = default_sidecar_path)
+    def save_sidecar!(path = extra_path("Metadata.yml"))
       FileUtils.mkdir_p(File.dirname(path))
       File.open(path, 'w') {|f| f.write(self.metadata.stringify_keys.to_yaml) }
     end

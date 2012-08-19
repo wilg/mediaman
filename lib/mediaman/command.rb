@@ -20,7 +20,7 @@ module Mediaman
       puts library_document.files_to_move.to_yaml
       puts "moving"
       library_document.move_to_library!
-      library_document.apply_metadata!
+      library_document.save_and_apply_metadata!
     end
     
     desc "metadata <file>", "returns all the metadata discoverable about this file or directory"
@@ -28,8 +28,8 @@ module Mediaman
       doc = Document.from_path(path)
       doc.extract_metadata!
       doc.save_sidecar!
-      puts "Metadata saved to #{doc.default_sidecar_path}"
       doc.download_image!
+      puts "Metadata and image saved to #{doc.extras_path}"
     end
     
   end
