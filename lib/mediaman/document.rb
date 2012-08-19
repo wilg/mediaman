@@ -76,9 +76,9 @@ module Mediaman
       end
     end
     
-    def save_sidecar!
-      FileUtils.mkdir_p(File.dirname(self.sidecar_path))
-      File.open(self.sidecar_path, 'w') {|f| f.write(self.metadata.stringify_keys.to_yaml) }
+    def save_sidecar!(path = sidecar_path)
+      FileUtils.mkdir_p(File.dirname(path))
+      File.open(path, 'w') {|f| f.write(self.metadata.stringify_keys.to_yaml) }
     end
     
     def video_files

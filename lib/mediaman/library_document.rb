@@ -9,8 +9,12 @@ module Mediaman
   
     attr_accessor :library_path
     
-    def move!
-      # Sorts based on media info.
+    def move_to_library!
+      files_to_move.each do |original_file, new_file|
+        FileUtils.mkdir_p(File.dirname(new_file))
+        FileUtils.move(original_file, new_file)
+      end
+      save_sidecar! library_sidecar_path
     end
     
     def files_to_move
@@ -70,6 +74,10 @@ module Mediaman
     
     def library_junk_path
       File.join library_extras_path, "Junk"
+    end
+    
+    def library_sidecar_path
+      File.join library_extras_path, "Metadata.yml"
     end
     
   end

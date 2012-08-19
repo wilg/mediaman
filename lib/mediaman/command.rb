@@ -9,7 +9,16 @@ module Mediaman
     def sort(path)
       library_document = LibraryDocument.from_path path
       library_document.library_path = File.expand_path options[:library]
-      library_document.sort!
+      # puts "Sidecar path:"
+      # puts library_document.library_sidecar_path
+      puts "Video:"
+      puts library_document.video_files
+      puts "Junk:"
+      puts library_document.junk_files
+      puts "Files to move:"
+      puts library_document.files_to_move.to_yaml
+      puts "moving"
+      puts library_document.move_to_library!
     end
     
     desc "metadata <file>", "returns all the metadata discoverable about this file or directory"
