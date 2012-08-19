@@ -4,9 +4,9 @@ module Mediaman
   
   class CommandLine < Thor
     
-    desc "sort <file>", "sorts the file according to its metadata"
+    desc "add <file>", "sorts the file according to its metadata"
     method_option :library, type: :string, aliases: "-l", desc: "Media library base folder to sort into.", default: "."
-    def sort(path)
+    def add(path)
       library_document = LibraryDocument.from_path path
       library_document.library_path = File.expand_path options[:library]
       # puts "Sidecar path:"
