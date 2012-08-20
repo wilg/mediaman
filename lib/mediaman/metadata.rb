@@ -10,7 +10,7 @@ module Mediaman
     end
     
     def canonical_episode_name
-      episode_details.title.presence
+      episode_details.try(:title).presence
     end
     
     def canonical_movie_title
