@@ -29,7 +29,7 @@ module Mediaman
       save_sidecar!
       download_image!
       add_metadata_to_file!
-      # Rewrap mxf to mp4.
+      # Rewrap mkv to mp4.
     end
     
     def add_metadata_to_file!

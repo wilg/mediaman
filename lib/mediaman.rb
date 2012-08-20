@@ -9,4 +9,5 @@ require "mediaman/trakt"
 # Models
 require "mediaman/metadata"
 require "mediaman/document"
+require "mediaman/temporary_document"
 require "mediaman/library_document"
