@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = Mediaman::VERSION
   gem.authors       = ["Wil Gieseler"]
   gem.email         = ["supapuerco@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = "Helps you organize your media!"
+  gem.summary       = "Helps you organize your media!"
+  gem.homepage      = "http://github.com/supapuerco/mediaman"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
