@@ -6,7 +6,7 @@ module Mediaman
   class Metadata < Hashie::Mash
     
     def canonical_show_name
-      show_details.title.presence || name.presence || raw_name.presence
+      show_details.try(:title).presence || name.presence || raw_name.presence
     end
     
     def canonical_episode_name
@@ -14,7 +14,7 @@ module Mediaman
     end
     
     def canonical_movie_title
-      movie_details.title.presence || name.presence || raw_name.presence
+      movie_details.try(:title).presence || name.presence || raw_name.presence
     end
     
     def episode_id
@@ -40,6 +40,13 @@ module Mediaman
         episode_details.try(:[], "overview").presence
       else
         movie_details.try(:[], "overview").presence
+      end
+    end
+
+    def canonical_director
+      if movie?
+        d = movie_details.try(:[], "people").try(:[], "directors").presence
+        d.map{|director| director.name}.join ", "
       end
     end
     
