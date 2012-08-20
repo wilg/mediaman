@@ -1,4 +1,5 @@
 require 'hashie'
+require 'digest/md5'
 
 module Mediaman
   
@@ -48,6 +49,10 @@ module Mediaman
     
     def canonical_year
       movie_details.try(:[], "year").presence || year.presence
+    end
+
+    def uuid
+      movie_details.try(:[], "imdb_id") || Digest::MD5.hexdigest("#{filename}")
     end
     
     def to_subler_hash
