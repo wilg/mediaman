@@ -46,7 +46,9 @@ module Mediaman
     def canonical_director
       if movie?
         d = movie_details.try(:[], "people").try(:[], "directors").presence
-        d.map{|director| director.name}.join ", "
+        if d
+          d.map{|director| director.name}.join ", "
+        end
       end
     end
     
