@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Mediaman::VERSION
   gem.authors       = ["Wil Gieseler"]
   gem.email         = ["supapuerco@gmail.com"]
-  gem.description   = "Helps you organize your media!"
-  gem.summary       = "Helps you organize your media!"
+  gem.description   = "Mediaman manages your media, man."
+  gem.summary       = "Mediaman manages your media, man."
   gem.homepage      = "http://github.com/supapuerco/mediaman"
 
   gem.files         = `git ls-files`.split($/)
