@@ -73,9 +73,8 @@ module Mediaman
     def local_metadata
       @local_metadata ||= begin
         metadata = {}
-        metadata.merge!(filename_metadata || {})
-        metadata.merge!(video_metadata || {})
         metadata.merge!(sidecar_metadata || {})
+        metadata.merge!(filename_metadata || {})
         metadata.reject!{|k, v| v.blank?}
         Metadata.new(metadata)
       end
