@@ -22,11 +22,20 @@ module Mediaman
       end
     end
     
-    desc "metadata <file>", "returns all the metadata discoverable about this file or directory"
+    desc "metadata <file/directory/title>", "returns all the metadata discoverable about this file, title, or directory"
     def metadata(path)
-      doc = Document.from_path(path)
-      doc.save_and_apply_metadata!
-      puts "Metadata and image saved to #{doc.extras_path}"
+      path = File.expand_path path
+      if !File.exists?(path) && !File.directory?(path)
+        name = path
+      end
+      if name
+        doc = Mediaman::TemporaryDocument.from_name(name)
+        puts doc.metadata.stringify_keys.to_yaml
+      else
+        doc = Document.from_path(path)
+        doc.save_and_apply_metadata!
+        puts "Metadata and image saved to #{doc.extras_path}"
+      end
     end
     
   end
