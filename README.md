@@ -33,9 +33,13 @@ It does this based on a few simple rules:
 
   Anything else is considered "Other Media".
 
+The parsing logic is handled by the [ToName gem](https://github.com/o-sam-o/toname).
+
 Then it will throw it into a pretty folder for you. Like this:
 
     ../Movies/Star Wars (1977).mov
+
+or
 
     ../TV Shows/Star Trek - The Next Generation/Season 2/2x03 - Elementary, Dear Data.mov
 
@@ -47,9 +51,13 @@ The artwork image and metadata (in YAML format) will also be saved for your refe
 
 #### Get Metadata Only
 
-To save a sidecar YAML file with as much metadata as Mediaman can muster, just use:
+To view a YAML-formatted printout of as much metadata as Mediaman can muster, just use:
 
     $ mediaman metadata ~/path/to/movie.mp4
+
+You can also just pass in a name:
+
+    $ mediaman metadata "the truman show 1998"
 
 #### Help
 
