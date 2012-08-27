@@ -33,15 +33,30 @@ describe Mediaman::MediaFilename do
     it "Breaking Bad S01E04" do
       h = parse("Breaking Bad S01E04")
       h[:name].should == "Breaking Bad"
+      h[:season_number].should == 1
       h[:episode_number].should == 4
-      h[:season_number].should == 4
     end
 
     it "My Best Friend 6x03" do
       h = parse("My Best Friend 6x03")
       h[:name].should == "My Best Friend"
-      h[:episode_number].should == 6
-      h[:season_number].should == 3
+      h[:season_number].should == 6
+      h[:episode_number].should == 3
+    end
+
+    it "extended editions" do
+      h = parse("The Fall Extended Edition")
+      h[:name].should == "The Fall"
+    end
+
+    it "extended editions" do
+      h = parse("The Fall Extended Version")
+      h[:name].should == "The Fall"
+    end
+
+    it "extended editions" do
+      h = parse("The Fall Extended")
+      h[:name].should == "The Fall"
     end
   
   end

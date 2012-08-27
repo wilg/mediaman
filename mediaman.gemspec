@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'mini_subler'
   gem.add_dependency 'httparty'
   gem.add_dependency 'hashie'
+  gem.add_dependency 'toname'
   
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"

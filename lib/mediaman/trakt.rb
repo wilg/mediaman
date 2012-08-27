@@ -35,7 +35,7 @@ module Mediaman
     class Movie < Fetcher
       
       def slug
-        "#{options[:title].parameterize}-#{options[:year].to_s.parameterize}"
+        options[:slug].presence || "#{options[:title].parameterize}-#{options[:year].to_s.parameterize}"
       end
       
       def fetch!
@@ -49,12 +49,20 @@ module Mediaman
       attr_accessor :show
       
       def fetch!
-        url = "http://api.trakt.tv/show/episode/summary.json/#{Trakt.api_key}/#{options[:show_title].parameterize}/#{options[:season_number]}/#{options[:episode_number]}"
+        url = "http://api.trakt.tv/show/episode/summary.json/#{Trakt.api_key}/#{slug}"
         self.response = r = self.class.get(url)
         self.show = Trakt::TVShow.from_hash self.response['show']
         self.response['episode']
       end
+
+      def slug
+        options[:slug].presence || "#{name_slug}/#{options[:season_number]}/#{options[:episode_number]}"
+      end
       
+      def name_slug
+        options[:name_slug].presence || "#{options[:show_title].parameterize}"
+      end
+
     end
     
     class TVShow < Fetcher

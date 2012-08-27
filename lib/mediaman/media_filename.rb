@@ -1,13 +1,26 @@
 module Mediaman
 
+  require "to_name"
+
   class MediaFilename
-    
+
     attr_accessor :filename
   
     def initialize(filename)        
       self.filename = filename
-      parse_name!
-      formatted_name # To init year
+      @parsed_name = self.to_name
+    end
+
+    def to_name
+      fn = ToName.to_name(filename)
+      {
+        name: fn.name,
+        year: fn.year,
+        raw_name: fn.raw_name,
+        location: fn.location,
+        season_number: fn.series,
+        episode_number: fn.episode
+      }
     end
     
     def to_hash
@@ -25,69 +38,15 @@ module Mediaman
       }
     end
   
-    def parse_name!
-      name = self.filename + ".mov"
-    
-      # Normal matching
-      normal_matches = name.match(/^([a-zA-Z0-9.]*)\.S([0-9]{1,2})E([0-9]{1,2}).*$/i)
-      if normal_matches
-        @item_name = normal_matches[1]
-        @season = normal_matches[2].to_i
-        @episode = normal_matches[3].to_i
-      end
-    
-      unless @item_name && @season && @episode
-        # Mythbusters hack
-        mythbusters_matches = name.match(/(myth.*)([0-9][0-9])([0-9][0-9])/i)
-        if mythbusters_matches && mythbusters_matches[1].downcase.include?("myth")
-          @item_name = "Mythbusters"
-          @season = mythbusters_matches[2].to_i
-          @episode = mythbusters_matches[3].to_i
-        end
-      end
-    
-    end
-    
     def raw_name
-      @item_name || self.filename
+      self.filename
     end
     
     def formatted_name
-      perioded_name = []
-      
-      name = 
-    
-      name_string = raw_name.gsub("'", "")
-      name_string = raw_name.gsub(";", "")
-        
-      splitsies = name_string.split(/[ -.\[\]]/)
-      splitsies.each_index do |i|
-        x =  splitsies[i].split(" ")
-        x = x.split("+")
-        x = x.split("_")
-        x = x.split("[")
-        x = x.split("]")
-        splitsies[i] = x
-      end
-    
-      name_done = false
-      i = 0
-      for item in splitsies.flatten
-        int = item.to_i
-        if (1900..Time.now.year + 3).cover?(int) && i > 0
-          @year = int
-          name_done = true
-        elsif item == "720p"
-          name_done = true
-        else
-          perioded_name << item unless name_done
-        end
-        i += 1
-      end    
-      name = perioded_name.join(" ")
+      name = @parsed_name[:name]
     
       # Hacks
-      name.gsub! /Extended( Version)/i, ""
+      name.gsub! /Extended( Version)( Edition)/i, ""
     
       name
     end
@@ -102,11 +61,11 @@ module Mediaman
     end
 
     def season
-      @season
+      @parsed_name[:season_number]
     end
 
     def episode
-      @episode
+      @parsed_name[:episode_number]
     end
 
     def tv?
@@ -114,7 +73,7 @@ module Mediaman
     end
   
     def year
-      @year
+      @parsed_name[:year]
     end
   
     def movie?
@@ -143,10 +102,6 @@ module Mediaman
     def to_s
       formatted_name
     end
-  
-    def debug
-      "name: #{name}, formatted_name: #{formatted_name}, slug: #{slug}, season: #{season}, episode: #{episode}, hd?: #{hd?}, tv?: #{tv?}, string: #{string}"
-    end
-  
+
   end
 end
