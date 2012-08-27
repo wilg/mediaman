@@ -89,6 +89,8 @@ module Mediaman
            tv = Trakt::TVEpisode.new show_title: local_metadata['name'], season_number: local_metadata['season_number'], episode_number: local_metadata['episode_number']
            Metadata.new({'episode_details' => tv.to_hash, 'show_details' => tv.show.to_hash})
          end
+      rescue
+        {}
       end
     end
     
