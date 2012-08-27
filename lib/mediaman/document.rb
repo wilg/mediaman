@@ -35,8 +35,6 @@ module Mediaman
     def add_metadata_to_file!
       h = metadata.to_subler_hash
       h[:artwork] = artwork_path if File.exists?(artwork_path)
-      puts "Primary: #{primary_video_file}"
-      puts h.to_s
       MiniSubler::Command.vendored.set_metadata primary_video_file, h
     rescue
       puts "Exception while adding metadata to file."

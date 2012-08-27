@@ -8,19 +8,13 @@ module Mediaman
     method_option :library, type: :string, aliases: "-l", desc: "Media library base folder to sort into.", default: "."
     # method_option :batch, type: :boolean, aliases: "-b", desc: "Adds each file or folder in the passed-in folder to the library.", default: false
     def add(path)
+      puts "Adding #{File.basename File.expand_path(path)}..."
       library_document = LibraryDocument.from_path path
       library_document.library_path = File.expand_path options[:library]
-      # puts "Sidecar path:"
-      # puts library_document.library_sidecar_path
-      puts "Video:"
-      puts library_document.video_files
-      puts "Junk:"
-      puts library_document.junk_files
-      puts "Files to move:"
-      puts library_document.files_to_move.to_yaml
-      puts "moving"
+      puts "Found #{library_document.video_files.size} video files and #{library_document.junk_files.size} junk files."
       library_document.move_to_library!
       library_document.save_and_apply_metadata!
+      puts "New location: #{library_document.path}."
     end
     
     desc "metadata <file>", "returns all the metadata discoverable about this file or directory"
