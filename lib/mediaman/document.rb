@@ -98,9 +98,9 @@ module Mediaman
     def remote_metadata
       @remote_metadata ||= begin
          if local_metadata['movie']
-           Metadata.new({'movie_details' => Trakt::Movie.new(title: local_metadata['name'], year: local_metadata['year'])})
+           Metadata.new({'movie_details' => Trakt::Movie.new(title: local_metadata['name'], year: local_metadata['year'], title_slug: local_metadata['title_slug'])})
          elsif local_metadata['tv']
-           tv = Trakt::TVEpisode.new show_title: local_metadata['name'], season_number: local_metadata['season_number'], episode_number: local_metadata['episode_number']
+           tv = Trakt::TVEpisode.new show_title: local_metadata['name'], season_number: local_metadata['season_number'], episode_number: local_metadata['episode_number'], title_slug: local_metadata['title_slug']
            Metadata.new({'episode_details' => tv.to_hash, 'show_details' => tv.show.to_hash})
          end
       rescue

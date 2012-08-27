@@ -7,8 +7,13 @@ module Mediaman
     attr_accessor :filename
   
     def initialize(filename)        
-      self.filename = filename
+      self.filename = override_filename filename
       @parsed_name = self.to_name
+    end
+
+    def override_filename(name)
+      name.gsub!("2012", "") if name.include?("Newsroom")
+      name
     end
 
     def to_name
@@ -34,7 +39,8 @@ module Mediaman
         season_number: self.season,
         episode_number: self.episode,
         hd: self.hd?,
-        hd_format: self.hd_format
+        hd_format: self.hd_format,
+        title_slug: self.title_slug
       }
     end
   

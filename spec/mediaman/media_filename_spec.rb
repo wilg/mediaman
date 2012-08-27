@@ -44,19 +44,39 @@ describe Mediaman::MediaFilename do
       h[:episode_number].should == 3
     end
 
+    it "My Best Friend 6x03" do
+      h = parse("My Best Friend 6x03")
+      h[:name].should == "My Best Friend"
+      h[:season_number].should == 6
+      h[:episode_number].should == 3
+    end
+
     it "extended editions" do
       h = parse("The Fall Extended Edition")
       h[:name].should == "The Fall"
     end
 
-    it "extended editions" do
+    it "extended version" do
       h = parse("The Fall Extended Version")
       h[:name].should == "The Fall"
     end
 
-    it "extended editions" do
-      h = parse("The Fall Extended")
-      h[:name].should == "The Fall"
+    it "Newsroom 2012" do
+      h = parse("The Newsroom 2012 S01E01")
+      h[:tv].should be_true
+      h[:name].should == "The Newsroom"
+      h[:title_slug].should == "the-newsroom-2012"
+      h[:season_number].should == 1
+      h[:episode_number].should == 1
+    end
+
+    it "Newsroom 2012" do
+      h = parse("The Newsroom S01E01")
+      h[:tv].should be_true
+      h[:name].should == "The Newsroom"
+      h[:title_slug].should == "the-newsroom-2012"
+      h[:season_number].should == 1
+      h[:episode_number].should == 1
     end
   
   end

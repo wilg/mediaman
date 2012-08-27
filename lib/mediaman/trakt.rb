@@ -56,11 +56,11 @@ module Mediaman
       end
 
       def slug
-        options[:slug].presence || "#{name_slug}/#{options[:season_number]}/#{options[:episode_number]}"
+        options[:slug].presence || "#{title_slug}/#{options[:season_number]}/#{options[:episode_number]}"
       end
       
-      def name_slug
-        options[:name_slug].presence || "#{options[:show_title].parameterize}"
+      def title_slug
+        options[:title_slug].presence || "#{options[:show_title].parameterize}"
       end
 
     end
