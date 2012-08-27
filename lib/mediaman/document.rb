@@ -54,6 +54,10 @@ module Mediaman
     def artwork_path
       extra_path "Artwork#{metadata.canonical_image_url.present? ? File.extname(metadata.canonical_image_url) : ".jpg"}"
     end
+
+    def add_to_itunes!
+      add_to_itunes = "osascript -e \"tell application \\\"iTunes\\\" to add POSIX file \\\"#{self.path}\\\"\""
+    end
     
     def metadata
       @metadata ||= begin
