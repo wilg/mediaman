@@ -33,11 +33,21 @@ module Mediaman
     end
     
     def add_metadata_to_file!
-      h = metadata.to_subler_hash
-      h[:artwork] = artwork_path if File.exists?(artwork_path)
-      MiniSubler::Command.vendored.set_metadata primary_video_file, h
+      if supports_embedding_video_metadata?
+        h = metadata.to_subler_hash
+        h[:artwork] = artwork_path if File.exists?(artwork_path)
+        MiniSubler::Command.vendored.set_metadata primary_video_file, h
+      end
     rescue
       puts "Exception while adding metadata to file."
+    end
+
+    def supports_embedding_video_metadata?
+      ext =~ /mp4/i || ext =~ /m4v/i || ext =~ /mkv/i || ext =~ /mov/i
+    end
+
+    def ext
+      File.extname self.path
     end
     
     def download_image!
