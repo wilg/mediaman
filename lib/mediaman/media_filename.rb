@@ -52,9 +52,9 @@ module Mediaman
       name = @parsed_name[:name]
     
       # Hacks
-      name.gsub! /Extended( Version)( Edition)/i, ""
+      name.gsub! /Extended( Version)?( Edition)?/i, ""
     
-      name
+      name.strip.chomp
     end
   
     def title_slug
