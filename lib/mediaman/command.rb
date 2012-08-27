@@ -7,6 +7,7 @@ module Mediaman
     desc "add <file>", "sorts the file according to its metadata"
     method_option :library, type: :string, aliases: "-l", desc: "Media library base folder to sort into.", default: "."
     # method_option :batch, type: :boolean, aliases: "-b", desc: "Adds each file or folder in the passed-in folder to the library.", default: false
+    method_option :itunes, type: :boolean, desc: "Attempts to add the final file to iTunes.", default: false
     def add(path)
       puts "Adding #{File.basename File.expand_path(path)}..."
       library_document = LibraryDocument.from_path path
@@ -15,6 +16,10 @@ module Mediaman
       library_document.move_to_library!
       library_document.save_and_apply_metadata!
       puts "New location: #{library_document.path}."
+      if options[:itunes]
+        library_document.add_to_itunes!
+        puts "Added to iTunes!"
+      end
     end
     
     desc "metadata <file>", "returns all the metadata discoverable about this file or directory"

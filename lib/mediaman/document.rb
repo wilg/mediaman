@@ -56,7 +56,8 @@ module Mediaman
     end
 
     def add_to_itunes!
-      add_to_itunes = "osascript -e \"tell application \\\"iTunes\\\" to add POSIX file \\\"#{self.path}\\\"\""
+      cmd = "osascript -e \"tell application \\\"iTunes\\\" to add POSIX file \\\"#{self.path}\\\"\""
+      `#{cmd}`
     end
     
     def metadata
