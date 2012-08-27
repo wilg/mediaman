@@ -104,6 +104,7 @@ module Mediaman
            Metadata.new({'episode_details' => tv.to_hash, 'show_details' => tv.show.to_hash})
          end
       rescue
+        puts "TRAKT_API_KEY not set. Please set this environment variable to use remote metadata." unless ENV["TRAKT_API_KEY"]
         {}
       end
     end
