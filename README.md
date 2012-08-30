@@ -2,54 +2,63 @@
 
 **Mediaman manages your media, man.**
 
-Have video files you need to organize? DVD backups or something?
+Have video files you need to organize? DVD backups or something? Need to do some batch operations? Get everything in order. Mediaman has you covered.
 
-## Usage
+## Command-Line Usage
 
 Mediaman comes with a command line interface called, cleverly enough, `mediaman`. There's a few little commands for you.
 
-#### Add to Library
+### Add to Library (`mediaman add`)
 
+The add command will probably be what you use the most. It does a few things:
 
-    $ mediaman add ~/path/to/movie.mp4
+1. Figures out what type of media this file represents.
 
-This will take the video file at the passed in path and try to organize it into a library directory structure. Mediaman will try to figure out what the video file represents, and if it can, download metadata about the film or television show.
+2. Puts it in a simple, easily navigable folder structure.
 
-It does this based on a few simple rules:
+3. Downloads metadata and artwork about the video and saves it.
 
-- Movies
+4. (Optionally) Adds the video to iTunes.
 
-  If the filename contains text followed by a year, it's assumed to be a movie.
+#### Usage
+
+    $ mediaman add ~/movie/file/or/folder
+    
+Interesting options:
+
+- `--batch` or `-b`: Adds each file or folder in the passed-in folder to the library. (Not recursive.)
+- `--library` or `-l`: : Media library base folder to sort into. (Defaults to `.`)
+- `--itunes`: Tries to add the video file to iTunes after all is said and done.
+
+#### Understanding the Media
+
+The **[ToName gem](https://github.com/o-sam-o/toname)** is responsible for the majority of this smartness, but it can't guess everything.
+
+Here's the general way Mediaman categorizes media files:
+
+- **Movies**: Text followed by a four-digit year.
 
   For example: `Star Wars (1977)` or `star.wars.1977.stereo`.
 
-- TV Shows
+- **TV Shows**: A name followed by season and episode number information.
 
-  If the filename contains season and episode number info, it's assumed to be a TV show.
+  For example: `Star Trek The Next Generation S02E03` or `Psych 3x02`.
 
-  For example: `Star Trek The Next Generation S02E03`.
+- Anything else is considered **Other Media**.
 
-- Other Media
+#### Library Folder Structure
 
-  Anything else is considered "Other Media".
+Once it figures out what your media is it will throw it into a pretty folder for you. Like:
 
-The parsing logic is handled by the [ToName gem](https://github.com/o-sam-o/toname).
+    ~/Movies/Star Wars (1977).mov
+    ~/TV Shows/Star Trek - The Next Generation/Season 2/2x03 - Elementary, Dear Data.mov
+    ~/Other Media/Information About Sharks.pdf
 
-Then it will throw it into a pretty folder for you. Like this:
+If it can, it will add the media's metadata (including artwork) to an `mp4` or `mkv` file using [MiniSubler](https://github.com/supapuerco/mini_subler).
 
-    ../Movies/Star Wars (1977).mov
+The artwork image and metadata (in [YAML format](http://www.yaml.org)) will also be saved for your reference in an `Extras` folder in the same directory as the movie file.
 
-or
-
-    ../TV Shows/Star Trek - The Next Generation/Season 2/2x03 - Elementary, Dear Data.mov
-
-The library root directory is your current directory, or pass in something else with the `-l` flag.
-
-If it can, it will add the media's metadata (including artwork) to an `mp4` or `mkv` file using Subler.
-
-The artwork image and metadata (in YAML format) will also be saved for your reference in an `Extras` folder in the same directory as the movie file.
-
-#### Get Metadata Only
+### Viewing Metadata (`mediaman metadata`)
 
 To view a YAML-formatted printout of as much metadata as Mediaman can muster, just use:
 
@@ -59,11 +68,9 @@ You can also just pass in a name:
 
     $ mediaman metadata "the truman show 1998"
 
-#### Help
+### Help (`mediaman help`)
 
-For more information, try:
-
-    $ mediaman help
+For more information, there's some help and whatnot available too.
 
 ## Configuration
 
@@ -79,11 +86,11 @@ Want another service? Pull request please!
 
 ## Requirements
 
-- OS X
+- **OS X**
 
   Tested only with OS X 10.8 Mountain Lion (so far).
 
-- Ruby 1.9.x
+- **Ruby 1.9.x**
   
   This is not the default Ruby shipped with Mountain Lion. You'll have to figure that one out yourself.
 
