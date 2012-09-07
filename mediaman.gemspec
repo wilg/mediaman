@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["supapuerco@gmail.com"]
   gem.description   = "Mediaman manages your media, man."
   gem.summary       = "Mediaman manages your media, man."
-  gem.homepage      = "http://github.com/supapuerco/mediaman"
+  gem.homepage      = "http://github.com/wilg/mediaman"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
