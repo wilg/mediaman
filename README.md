@@ -54,7 +54,7 @@ Once it figures out what your media is it will throw it into a pretty folder for
     ~/TV Shows/Star Trek - The Next Generation/Season 2/2x03 - Elementary, Dear Data.mov
     ~/Other Media/Information About Sharks.pdf
 
-If it can, it will add the media's metadata (including artwork) to an `mp4` or `mkv` file using [MiniSubler](https://github.com/supapuerco/mini_subler).
+If it can, it will add the media's metadata (including artwork) to an `mp4` or `mkv` file using [MiniSubler](https://github.com/wilg/mini_subler).
 
 The artwork image and metadata (in [YAML format](http://www.yaml.org)) will also be saved for your reference in an `Extras` folder in the same directory as the movie file.
 
